@@ -1,12 +1,39 @@
 import { app, BrowserWindow, screen } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+// updater
+import { autoUpdater } from 'electron-updater';
+import * as isDev from 'electron-is-dev';
+
+// setup logger
+autoUpdater.logger = require('electron-log');
+// autoUpdater.logger.transports.file.level = 'info';
+
+// detup autoupdater
+autoUpdater.on('checking-for-update', () => {
+  console.log('Checking for update . . .')
+})
+
+autoUpdater.on('checking-available', (info) => {
+  console.log('Update available!')
+  console.log('Info', info)
+})
+
+autoUpdater.on('checking-not-available', () => {
+  console.log('Update not available!')
+})
+
+autoUpdater.on('error', (error) => {
+  console.log('Error', error)
+})
 
 let win: BrowserWindow = null;
 const args = process.argv.slice(1),
   serve = args.some(val => val === '--serve');
 
 function createWindow(): BrowserWindow {
+
+  console.log('on create window')
 
   const electronScreen = screen;
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
@@ -54,11 +81,16 @@ function createWindow(): BrowserWindow {
 }
 
 try {
+  console.log('prepare run app')
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
-  app.on('ready', () => setTimeout(createWindow, 400));
+  app.on('ready', () => {
+    setTimeout(createWindow, 400);
+    console.log('On Ready . . .')
+    autoUpdater.checkForUpdates();
+  });
 
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {
@@ -70,6 +102,8 @@ try {
   });
 
   app.on('activate', () => {
+    console.log('On Ready 2 . . .')
+    autoUpdater.checkForUpdates();
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (win === null) {

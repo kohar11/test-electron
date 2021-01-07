@@ -1,6 +1,6 @@
 {
   "name": "angular-electron",
-  "version": "9.0.3",
+  "version": "1.0.0",
   "description": "Angular 11 with Electron (Typescript + SASS + Hot Reload)",
   "homepage": "https://github.com/maximegris/angular-electron",
   "author": {
@@ -40,7 +40,28 @@
     "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
     "lint": "ng lint"
   },
-  "dependencies": {},
+  "build": {
+    "appId": "com.example.app",
+    "productName": "Test Auto Update",
+    "publish": [
+      {
+        "provider": "github",
+        "repo": "test-electron",
+        "owner": "kohar11"
+      }
+    ],
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    }
+  },
+  "dependencies": {
+    "electron-is-dev": "1.2.0",
+    "electron-log": "4.3.1",
+    "electron-updater": "4.3.5"
+  },
   "devDependencies": {
     "@angular-builders/custom-webpack": "10.0.1",
     "@angular-devkit/build-angular": "0.1100.3",
